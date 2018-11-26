@@ -80,7 +80,7 @@ class GeneralLedgerReportWizard(models.TransientModel):
     initial_account_id = fields.Many2one(
         'account.account', string='Initial Account',
     )
-    final_account_id = fields.Many(
+    final_account_id = fields.Many2one(
         'account.account', string='Final Account',
     )
 
