@@ -18,6 +18,8 @@
                             <field name="date_to"/>
                             <field name="fy_start_date" invisible="1"/>
                             <field name="journal_ids" widget="many2many_tags" invisible="1" options="{'no_create': True}"/>
+                            <field name="initial_account_id"/>
+                            <field name="final_account_id"/>
                         </group>
                         <group name="other_filters">
                             <field name="target_move" widget="radio"/>

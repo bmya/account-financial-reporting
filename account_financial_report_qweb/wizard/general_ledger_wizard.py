@@ -77,6 +77,12 @@ class GeneralLedgerReportWizard(models.TransientModel):
         comodel_name='account.analytic.tag',
         string='Filter accounts',
     )
+    initial_account_id = fields.Many2one(
+        'account.account', string='Initial Account',
+    )
+    final_account_id = fields.Many(
+        'account.account', string='Final Account',
+    )
 
     @api.depends('date_from')
     def _compute_fy_start_date(self):
@@ -113,6 +119,19 @@ class GeneralLedgerReportWizard(models.TransientModel):
                 domain += [('internal_type', '=', 'receivable')]
             elif self.payable_accounts_only:
                 domain += [('internal_type', '=', 'payable')]
+            self.account_ids = self.env['account.account'].search(domain)
+        else:
+            self.account_ids = None
+
+    @api.onchange('initial_account_id', 'final_account_id')
+    def onchange_initial_final_accounts(self):
+        """Handle account_code_range."""
+        if self.initial_account_id or self.final_account_id:
+            domain = []
+            if self.initial_account_id:
+                domain += [('code', '>=', self.initial_account_id.code)]
+            if self.final_account_id:
+                domain += [('code', '<=', self.final_account_id.code)]
             self.account_ids = self.env['account.account'].search(domain)
         else:
             self.account_ids = None
