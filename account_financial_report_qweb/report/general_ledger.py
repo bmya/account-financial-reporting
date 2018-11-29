@@ -747,11 +747,14 @@ WITH
                 p.id AS partner_id,
                 COALESCE(
                     CASE
-                        WHEN
-                            NULLIF(p.name, '') IS NOT NULL
-                            AND NULLIF(p.ref, '') IS NOT NULL
-                        THEN p.name || ' (' || p.ref || ')'
-                        ELSE p.name
+                        WHEN NULLIF(p.name, '') IS NOT NULL
+                        THEN p.name
+                        ELSE
+                            CASE
+                                WHEN NULLIF(p.ref, '') IS NOT NULL
+                                THEN p.ref
+                                ELSE p.name
+                            END
                     END,
                     '""" + _('No partner allocated') + """'
                 ) AS partner_name
@@ -1125,11 +1128,14 @@ SELECT
         if not only_empty_partner_line:
             query_inject_move_line += """
     CASE
-        WHEN
-            NULLIF(p.name, '') IS NOT NULL
-            AND NULLIF(p.ref, '') IS NOT NULL
-        THEN p.name || ' (' || p.ref || ')'
-        ELSE p.name
+        WHEN NULLIF(p.name, '') IS NOT NULL
+        THEN p.name
+        ELSE
+            CASE
+                WHEN NULLIF(p.ref, '') IS NOT NULL
+                THEN p.ref
+                ELSE p.name
+            END
     END AS partner,
             """
         elif only_empty_partner_line:
