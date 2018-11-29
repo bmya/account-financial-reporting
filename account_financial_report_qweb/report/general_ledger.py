@@ -1146,9 +1146,11 @@ SELECT
     /* CONCAT_WS(
         ' - ', NULLIF(ml.ref, ''), NULLIF(ml.name, '')
     ) AS label, */
-    CONCAT_WS(
-        ' - ', NULLIF(ml.name, '')
-    ) AS label,
+    CASE 
+        WHEN ml.name IS NOT NULL
+        THEN ml.name
+        ELSE NULLIF(ml.ref, '')
+    END AS label,
     aa.name AS cost_center,
     fr.name AS matching_number,
     ml.debit,
